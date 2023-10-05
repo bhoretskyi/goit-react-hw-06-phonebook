@@ -1,6 +1,9 @@
-import { Formik,ErrorMessage } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { StyledButton, StyledField, StyledForm } from './Form.styled';
 import * as Yap from 'yup';
+import { nanoid } from 'nanoid';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactSlise';
 
 const FindSchema = Yap.object().shape({
   name: Yap.string()
@@ -16,13 +19,33 @@ const FindSchema = Yap.object().shape({
     .required('required'),
 });
 
-export const UserForm = ({ addName }) => {
+export const UserForm = () => {
+  const contacts = useSelector(state => state.contactList.contacts);
+  const dispatch = useDispatch();
+
+  const addName = newName => {
+    const existingContact = contacts.find(
+      contact => contact.name.toLowerCase() === newName.name.toLowerCase()
+    );
+    if (existingContact) {
+      window.alert(`Contact with name '${newName.name}' already exists!`);
+      return;
+    }
+    const newContact = {
+      id: nanoid(),
+      name: newName.name,
+      number: newName.number,
+    };
+    console.log(newContact);
+
+    // setContacts(prevContacts => [...prevContacts, newContact]);
+    dispatch(addContact(newContact));
+  };
   return (
     <div>
       <Formik
         initialValues={{ name: '', number: '', find: '' }}
         onSubmit={values => {
-
           addName({ name: values.name, number: values.number });
         }}
         validationSchema={FindSchema}
@@ -40,7 +63,6 @@ export const UserForm = ({ addName }) => {
           </label>
 
           <StyledButton type="submit">Add contact</StyledButton>
-         
         </StyledForm>
       </Formik>
     </div>

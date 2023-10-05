@@ -1,12 +1,16 @@
 import { StyledButton } from "./ContactList.styled"
-export const ContactList = ({filteredContacts, deleteContact}) => {
+import { deleteContact } from "redux/contactSlise"
+import { useDispatch } from "react-redux"
+
+export const ContactList = ({filteredContacts}) => {
+  const dispatch = useDispatch()
     return (<ul>
         {filteredContacts.map(contact => (
           <li key={contact.id}>
             <p>
               {contact.name}: {contact.number}
             </p>
-            <StyledButton onClick={() => deleteContact(contact.id)}>
+            <StyledButton onClick={() => dispatch(deleteContact(contact.id))}>
               Delete
             </StyledButton>
           </li>
