@@ -37,8 +37,6 @@ export const UserForm = () => {
       number: newName.number,
     };
     console.log(newContact);
-
-    // setContacts(prevContacts => [...prevContacts, newContact]);
     dispatch(addContact(newContact));
   };
   return (
